@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+		<link href="css/font-awesome.min.css" rel="stylesheet">
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.mobile.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			var slidertime = 0;
+			var sayHello=false;
+			var paytime=0;
+			var returnData='';
+			//图片轮播
+			function beginslide() {
+				$("#slider").css("visibility", "visible").css("z-index", "999");
+				sayHello=true;
+				var gallery = mui('.mui-slider');
+				gallery.slider({
+					interval: 3000, //自动轮播周期，若为0则不自动播放，默认为0；
+				});
+			}
+			var slidetime = setInterval(function() {
+				slidertime = slidertime + 1;
+
+				if(slidertime ==60) {
+					beginslide();
+				}
+			}, 1000)
+			$(document).tap(function() {
+				$("#slider").css("visibility", 'hidden').css("z-index", "-1");
+				
+				slidertime = 0;
+				if (sayHello==true) {
+					initialization();
+					$("#list").hide();
+					$('#detail').hide();
+					$('#shopdetail').hide();
+					$('#shoplist').hide();
+					$('#payPage').hide();
+					$('#done').hide();
+					dateTime();
+					startTransform('欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。')
+					sayHello=false;
+				}
+			})
+			//图片轮播结束
+			
+			//初始化界面
+			function initialization(){
+				$("#chatbox").children('div').empty().append('<div class="chatbox_left clearfix"><p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p></div>');
+				mui('#chatbox').scroll().reLayout();
+				mui('#chatbox').scroll().scrollToBottom();
+			}
+			
+			//会话框滚动
+			// 常用配置项
+//			function scrollbar (){
+				mui.ready(function () {
+			   	
+				 	var options = {
+				 	    scrollY: true, //是否竖向滚动
+				 	    scrollX: false, //是否横向滚动
+				 	    startX: 0, //初始化时滚动至x
+				 	    startY: 0, //初始化时滚动至y
+				 	    indicators: true, //是否显示滚动条
+				 	    deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
+				 	    bounce: true, //是否启用回弹
+				 	}
+			
+				 	mui('#chatbox').scroll({
+				 	    deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+				 	});
+				 	mui('.mui-scroll-wrapper').scroll({
+						deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+					});
+				 	mui('#chatbox').scroll().scrollToBottom();
+				})
+//			}
+//			scrollbar();
+
+			function checkVoice(){
+				var options = {
+					engine:'iFly',
+					userInterface:false,
+					continue:true,
+					timeout:100000
+				};
+				plus.speech.startRecognize( options, function ( s ) {
+					slidertime=0;
+					console.log(s);
+					$('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p><i class="fa fa-user-circle" style="padding: 1rem;"></i>'+s+'</p></div>');
+					mui('#chatbox').scroll().reLayout();
+					mui('#chatbox').scroll().scrollToBottom();
+					if (s.indexOf('拜拜')>-1) {
+						plus.speech.stopRecognize();
+					}
+				} );
+			}
+			
+			//停止语音识别plus.speech.stopRecognize()
+			//语音识别
+			
+			function startRecognize () {
+				var options = {};
+				options.engine = 'iFly';
+				//超时时间
+//				options.timeout=5000;
+				options.userInterface=false;
+				options.continue=true;
+				
+				plus.speech.startRecognize( options, function ( s ) {
+					slidertime=0;
+					$('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p><i class="fa fa-user-circle" style="padding: 1rem;"></i>'+s+'</p></div>');
+					mui('#chatbox').scroll().reLayout();
+					mui('#chatbox').scroll().scrollToBottom();
+					knowledgebase(s);
+				} );
+			}
+			
+			//调用知识库
+			
+			//时间戳
+			var datetime;
+			function dateTime(){
+				var date = new Date();
+				var month = date.getMonth() + 1;
+				var day = date.getDate();
+				var hour = date.getHours();
+				var minute = date.getMinutes();
+				var second = date.getSeconds();
+				if(month < 10) {
+					month = "0" + month.toString()
+				};
+				if(day < 10) {
+					day = "0" + day.toString()
+				};
+				if(hour < 10) {
+					hour = "0" + hour.toString()
+				};
+				if(minute < 10) {
+					minute = "0" + minute.toString()
+				};
+				if(second < 10) {
+					second = "0" + second.toString()
+				};
+				datetime=date.getFullYear().toString() + month + day + hour + minute + second;
+			}
+			dateTime();
+			function knowledgebase (word) {
+				slidertime=0;
+
+				var data={
+					callSign:datetime,
+					chat:word,
+					user:'admin',
+					chatRole:'yonghu'
+				}
+				$.ajax({
+					type: "post",
+					url: "http://39.105.41.93:8484/smart/api/chatTest",
+					async: true,
+					data: JSON.stringify(data),
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function(r) {
+						slidertime=0;
+						if (r.result=='success') {
+							$('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>'+r.qa[0].answer+'</p></div>');
+							mui('#chatbox').scroll().reLayout();
+							mui('#chatbox').scroll().scrollToBottom();
+							startTransform(r.qa[0].answer);
+							returnData=r.qa[0].answer;
+							returnAnswer(r.qa[0].answer);
+						}else{
+							$('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p></div>');
+							mui('#chatbox').scroll().reLayout();
+							mui('#chatbox').scroll().scrollToBottom();
+							startTransform('很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。');
+							returnAnswer('很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。');
+						}
+					}
+				});
+			}
+			
+			function returnAnswer (word){
+				var data={
+					callSign:datetime,
+					chat:word,
+					user:'admin',
+					chatRole:'kefu'
+				}
+				$.ajax({
+					type: "post",
+					url: "http://39.105.41.93:8484/smart/api/chatTest",
+					async: true,
+					data: JSON.stringify(data),
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function(r) {
+					}
+				});
+			}
+
+			
+			//语音合成
+			function startTransform(transformword) {
+				slidertime=0;
+				var receiver;
+
+                receiver = plus.android.implements('com.iflytek.cloud.SynthesizerListener', {
+                    onEvent: function(arg0, arg1, arg2, arg3) {
+
+                    },
+                    onSpeakBegin: function() {
+						slidertime=0;
+                    },
+                    onSpeakPaused: function() {
+                    	slidertime=0;
+                    },
+                    onSpeakResumed: function() {
+                    	slidertime=0;
+                    },
+                    onBufferProgress: function(percent, beginPos, endPos, info) {
+                    	slidertime=0;
+                    },
+                    onSpeakProgress: function(percent, beginPos, endPos) {
+                    	slidertime=0;
+                        // 合成进度
+
+                    },
+                    onCompleted: function(error) {
+                    	slidertime=0;
+
+                    	if (transformword.indexOf('结束')!=-1 || transformword.indexOf('再见')!=-1 || transformword.indexOf('拜拜')!=-1 || transformword.indexOf('没问题')!=-1) {
+                    		return;
+                    	}
+                    	if (transformword=='为您展示今天从北京南站到上海的所有车次信息') {
+                    		dateTime();
+                    		$('#list').slideDown('slow');
+                    		return;
+                    	}
+                    	if (transformword=='北京南站候车厅有这些特产店和礼品店，您看一下。') {
+                    		dateTime();
+                    		$('#shoplist').slideDown('slow');
+                    		return;
+                    	}
+						if (transformword.indexOf('知识产权双创阶梯培训')>-1) {
+                    		dateTime();
+                    	}
+                        startRecognize();
+
+                    }
+                });
+				
+				
+				var main = plus.android.runtimeMainActivity();
+				var SpeechUtility = plus.android.importClass('com.iflytek.cloud.SpeechUtility');
+				SpeechUtility.createUtility(main,"appid=5a6ebba2");
+				var SynthesizerPlayer = plus.android.importClass('com.iflytek.cloud.SpeechSynthesizer');
+				var play = SynthesizerPlayer.createSynthesizer(main, null);
+				play.startSpeaking(transformword,receiver);
+			}
+			
+			
+			
+			
+			
+			//付款时间
+			function countdown (){
+				
+				var p=setInterval(function(){
+						paytime++;
+
+
+						if (paytime==30) {
+							$('#payPage').hide();
+							$('#done').show();
+							var lasttime=5;
+							clearInterval(p);
+							var l=setInterval(function(){
+								$('#done').children('div').find('span').html(lasttime);
+
+								lasttime--;
+								if (lasttime<0) {
+									initialization();
+									$("#list").hide();
+									$('#detail').hide();
+									$('#shopdetail').hide();
+									$('#shoplist').hide();
+									$('#payPage').hide();
+									$('#done').hide();
+									clearInterval(p);
+									clearInterval(l);
+									paytime=0;
+								}
+							},1000)
+
+						}
+				},1000)
+			}
+			
+			
+			
+			//去掉loading
+				setTimeout(function(){$('.ui-loader').remove()},200)
+				
+			
+		</script>
+	</head>
+
+	<body>
+		<!--图片轮播-->
+		<div id="slider" class="mui-slider" style="visibility: hidden;z-index: -1;position: fixed;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;">
+			<div class="mui-slider-group mui-slider-loop" class="full">
+				<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#" class="full"><img src="images/banner2.jpg" class="full"></a>
+				</div>
+				<div class="mui-slider-item">
+					<a href="#" class="full"><img src="images/banner3.jpg" class="full"></a>
+				</div>
+				<div class="mui-slider-item">
+					<a href="#" class="full"><img src="images/banner4.jpg" class="full"></a>
+				</div>
+				<div class="mui-slider-item">
+					<a href="#" class="full"><img src="images/banner2.jpg" class="full"></a>
+				</div>
+				<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+				<div class="mui-slider-item mui-slider-item-duplicate">
+					<a href="#" class="full"><img src="images/banner1.jpg" class="full"></a>
+				</div>
+			</div>
+		</div>
+		<!--轮播结束-->
+		<i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 25%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>
+
+		<div class="mui-scroll-wrapper" id="chatbox">
+			<div id="" class="mui-scroll">
+				<div class="chatbox_left clearfix">
+					<p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p>
+				</div>
+				<!--<div class="chatbox_right clearfix">
+					<p><i class="fa fa-user-circle" style="padding: 1rem;"></i>即可垃圾上单考虑过金坷垃就是看到了更加快乐个偶家奥斯卡进度更快了解来看</p>
+				</div>-->
+				
+			</div>
+			
+		</div>
+		
+
+		
+		<div id="list" >
+			<i class="fa fa-close" style="font-size: 3rem;float: right;" id="listImg"></i>
+			<div class="clearfix" id="totaltrain">
+				
+				<table class="table" >
+					<thead class="thead">
+						<tr>
+							<th>车次</th>
+							<th>出发站<br />/到达站</th>	
+							<th>出发时间<br />/到达时间</th>		
+							<th>历时</th>		
+							<th>商务<br />特等座</th>
+							<th>一等座</th>
+							<th>二等座</th>
+							<th>高级<br />软卧</th>
+							<th>软卧</th>
+							<th>动卧</th>
+							<th>硬卧</th>
+							<th>软座</th>
+							<th>硬座</th>
+							<th>五座</th>
+							<th>其他</th>
+						</tr>
+					</thead>
+					<tbody class="tbody">
+						<tr align="center" id="G7">
+							<td>G7</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+						<tr align="center" id="G9">
+							<td>G9</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+						<tr align="center"id="T109">
+							<td>T109</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+						<tr align="center" id="D313">
+							<td>D313</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+						<tr align="center" id="D311">
+							<td>D311</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+						<tr align="center" id="321">
+							<td>321</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+					</tbody>
+					<tfoot class="tfoot">
+						
+					</tfoot>
+				</table>
+			</div>
+			<div class="adbox">
+				<img src="images/ad.png"/>
+			</div>	
+		</div>
+		<div id="detail" style="">
+			<i class="fa fa-close" style="font-size: 3rem;float: right;" id="detailImg"></i>
+			<div id="traininfo">
+				<table class="table" >
+					<thead class="thead">
+						<tr>
+							<th>车次</th>
+							<th>出发站<br />/到达站</th>	
+							<th>出发时间<br />/到达时间</th>		
+							<th>历时</th>		
+							<th>商务<br />特等座</th>
+							<th>一等座</th>
+							<th>二等座</th>
+							<th>高级<br />软卧</th>
+							<th>软卧</th>
+							<th>动卧</th>
+							<th>硬卧</th>
+							<th>软座</th>
+							<th>硬座</th>
+							<th>五座</th>
+							<th>其他</th>
+						</tr>
+					</thead>
+					<tbody class="tbody">
+						<tr align="center" id="G7">
+							<td>G7</td>
+							<td>北京南<br />上海虹桥</td>
+							<td>19:00 <br />23:24</td>
+							<td>04:24 <br />当日到达</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">无</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+							<td class="Mark">-</td>
+						</tr>
+						<tr align="center" style="height: 40px;background: #EDF2F7;">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="Mark"></td>
+							<td class="Mark" style="color:red">￥65.5</td>
+							<td class="Mark" style="color:red">￥54.5</td>
+							<td class="Mark"></td>
+							<td class="Mark"></td>
+							<td class="Mark"></td>
+							<td class="Mark"></td>
+							<td class="Mark"></td>
+							<td class="Mark"></td>
+							<td class="Mark" style="color:red">￥54.5</td>
+							<td class="Mark"></td>
+						</tr>
+				
+					</tbody>
+					
+				</table>
+				<div class="common">
+					<p style="font-family: PingFangSC-Semibold;font-size: 18px;color: #5B5B5B;padding: 10px 0;">站点信息</p>
+					<img src="20180306160932.png"/>
+				</div>
+				<div class="common">
+					<p style="font-family: PingFangSC-Semibold;font-size: 18px;color: #5B5B5B;padding: 10px 0;">进站口</p>
+					<div class="entrance" style="padding: 10px 0;">
+						<span>检票口：检票口 19号</span>
+						<span>地点：一楼大厅西侧</span>
+					</div>
+					<img src="20180306161234.png"/>
+				</div>
+			</div>
+			<div class="adbox">
+				<img src="images/ad.png"/>
+			</div>
+		</div>
+		<div id="shoplist" style="width: 100%;height: 100%;display: none;">
+			<i class="fa fa-close" style="font-size: 3rem;float: right;" id="shoplistcolse"></i>
+
+			<div class="container mui-scroll-wrapper" style="width: 90%;margin-top: 10%;height: 43%;margin-left: 5%;">
+				<div id="seller" class="mui-scroll">
+					<p class="title">入驻商家</p>
+					<div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+						<div class="goods">
+							<p class="sellerName">北京稻香村</p>
+							<img class="goodsImg" src="images/shop1.png"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="adbox" style="margin-top: 110%!important">
+				<img src="images/ad.png"/>
+			</div>
+		</div>
+		<div id="shopdetail" style="display: none;height: 100%;width: 100%;overflow: hidden;">
+			<i class="fa fa-close" style="font-size: 3rem;float: right;" id="shopdetailclose"></i>
+			<!--<img id="detailImg" class="icon" src="Group 6.png"/>-->
+			<div class="container mui-scroll-wrapper" style="height: 50%;margin: 10% 40px;width: 1000px;">
+				<div id="sellerDetail" class="mui-scroll">
+					<p class="title">入驻商家</p>
+					<div class="sellerDesc">				
+						<img class="img" src="images/shop1.png"/>
+						<div style="margin-left: 20px;display: inline-block;">
+							<p>北京稻香村</p>
+							<p>地点：北京南站</p>
+							<p>电话：1111111</p>
+							<p>营业时间：07:00-20:00</p>			
+						</div>						
+					</div>
+					<div class="map">
+						<img style="width: 100%;" src="map.png"/>
+					</div>
+					<div style="clear: both;"></div>
+					<div class="goodList">
+						<img class="goodsImg" src="goods1.jpg" alt="" />
+						<p style="font-size: 1.6rem;">绿豆饼</p>
+						<p><span>价格：<i style="color: red;font-size: 1.6rem;">￥100.00</i></span><span class="addCart" style="float: right;margin-right: 30px;"><i  style="font-size: 30px;color:#7575b1 ;cursor: pointer;" class="fa fa-shopping-cart" title="加入购物车"></i></span></p>
+					</div>
+					<div class="goodList">
+						<img class="goodsImg" src="goods2.jpg" alt="" />
+						<p style="font-size: 1.6rem;">奶酪包</p>
+						<p><span>价格：<i style="color: red;font-size: 1.6rem;">￥110.00</i></span><span class="addCart" style="float: right;margin-right: 30px;"><i style="font-size: 30px;color:#7575b1 ;cursor: pointer;" class="fa fa-shopping-cart" title="加入购物车"></i></span></p>
+					</div>
+					<div class="goodList">
+						<img class="goodsImg" src="goods3.jpg" alt="" />
+						<p style="font-size: 1.6rem;">红豆饼</p>
+						<p><span>价格：<i style="color: red;font-size: 1.6rem;">￥120.00</i></span><span class="addCart" style="float: right;margin-right: 30px;"><i style="font-size: 30px;color:#7575b1 ;cursor: pointer;" class="fa fa-shopping-cart" title="加入购物车"></i></span></p>
+					</div>
+					<div class="goodList">
+						<img class="goodsImg" src="goods4.jpg" alt="" />
+						<p style="font-size: 1.6rem;">脏脏包</p>
+						<p><span>价格：<i style="color: red;font-size: 1.6rem;">￥130.00</i></span><span class="addCart" style="float: right;margin-right: 30px;"><i style="font-size: 30px;color:#7575b1 ;cursor: pointer;" class="fa fa-shopping-cart" title="加入购物车"></i></span></p>
+					</div>
+					<div class="goodList">
+						<img class="goodsImg" src="goods5.jpg" alt="" />
+						<p style="font-size: 1.6rem;">墨子酥</p>
+						<p><span>价格：<i style="color: red;font-size: 1.6rem;">￥140.00</i></span><span class="addCart" style="float: right;margin-right: 30px;"><i style="font-size: 30px;color:#7575b1 ;cursor: pointer;" class="fa fa-shopping-cart" title="加入购物车"></i></span></p>
+					</div>
+					<div class="goodList">
+						<img class="goodsImg" src="goods6.jpg" alt="" />
+						<p style="font-size: 1.6rem;">潘娜托尼</p>
+						<p><span>价格：<i style="color: red;font-size: 1.6rem;">￥150.00</i></span><span class="addCart" style="float: right;margin-right: 30px;"><i style="font-size: 30px;color:#7575b1 ;cursor: pointer;" class="fa fa-shopping-cart" title="加入购物车"></i></span></p>
+					</div>
+					<p class="title">购物车</p>
+					<div id="cart">
+						<p class="tips" style="text-align: center;">购物车为空，请添加商品。</p>
+						<div class="selectedGoods">
+							<!--<div class="list">
+								<img style="width: 75px;margin:18px 38px;" src="goods.png"/>
+								<span>神盾局特工</span>
+								<span>价格：<i style="color: red;">￥140.00</i></span>
+								<span>数量: <i class="fa fa-minus-square-o minus"></i>&nbsp; <i class="mounts">0</i> &nbsp;<i class="fa fa-plus-square-o plus"></i></span>
+							</div>-->
+							
+						</div>
+						<div style="height: 100px;border: 1px solid #D1D1D1;">
+							<p style="text-align: right;margin-right: 70px;">商品合计：<span id="sum" style="font-size: 1.6rem;">0</span></p>
+							<div  id="accounts" style="background: #F56623;width: 108px;height: 35px;line-height: 35px;text-align: center;float: right;
+									border: 1px solid #DDDDDD;background: #F56623;border-radius: 8px;margin-right: 40px;cursor: pointer;">
+								<span>结算</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="adbox" style="margin-top: 110%!important">
+				<img src="images/ad.png"/>
+			</div>
+		</div>
+		<div id="payPage" style="z-index: 988;">
+			<div class="container" style="width: 796px;">
+				<div id="pay">
+					<p class="title">
+						<span>付款</span>
+						<span id="closePayPage" style="float: right;margin-right: 40px;cursor: pointer;">关闭</span>
+					</p>
+					<div class="content">
+						<div class="QRCode">
+							<p class="payFont">扫一扫手机支付</p>
+							<img style="width: 167px;" src="QRCode.png"/>
+						</div>
+						<div class="pickUp">
+							<p class="payFont">取货方式：<span style="font-size: 12px;color: #666666;">您支付后，可以选择取货方式。</span></p>
+							<div class="choice">
+								<p class="payFont" style="font-size:18px ;">①送至车位</p>
+								<p>商家会按照您填写的位置信息，将您的商品送至火车座位</p>
+								<p class="payFont"style="font-size:18px ;">②进店自提</p>
+								<p>我们会为您提供导航服务</p>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="done" style="display: none;z-index: 989;position: absolute;top: 50%;left: 50%;width:50%;height:10%;padding:20px;text-align:center;transform: translate(-50%, -50%);">
+			<div class="container" style="width: 100%;height: 100%;">
+				<p class="title">付款<i class="fa fa-close" style="font-size: 3rem;float: right;padding: .5rem;" onclick="$(this).parent().parent().hide()"></i></p>
+				
+				<p style="margin-top: 5%;">下单成功</p>
+				<p id="lasttime"><span>5</span>秒后自动返回首页</p>
+			</div>
+		
+		</div>
+		
+		<script type="text/javascript">
+			//车次信息显示隐藏
+			$(".tbody tr").click(function(event){
+
+
+				$("#detail").slideDown('slow');
+				$("#list").slideUp('slow')
+			})
+			$("#listImg").click(function(){
+
+				initialization();
+				$("#list").slideUp('slow');
+			})
+			$('#shoplistcolse').click(function(){
+				initialization();
+				$('#shoplist').slideUp('slow');
+			})
+			$("#detailImg").click(function(){
+				$("#detail").slideUp('slow')
+				$("#list").slideDown('slow')
+			})
+			
+			var a;
+			
+			//增加
+			$('.selectedGoods').off().on('click','.plus',function(){
+				
+			 	 a = $(this).parent().children(".mounts").html();
+			 	 a++;
+				$(this).parent().children(".mounts").html(a)
+				common();
+			})
+//			$(".selectedGoods").delegate(".plus","click",function(){
+//			});
+			//减少
+			$('.selectedGoods').on('click','.minus',function(){
+				
+			 	a = $(this).parent().children(".mounts").html();
+			 	 a--;
+				if(a<0){
+					return;
+				}
+				$(this).parent().children(".mounts").html(a)
+				common();
+			})
+//			$(".selectedGoods").delegate(".minus","click",function(){
+//			});
+			//计算价格的公共函数
+			function common(){
+				var sum=0;
+				$(".list").each(function(index,value) {
+//					console.log(parseFloat($(this).find(".price").text()))
+					var price = parseFloat($(this).find(".price").text());
+//					console.log($(this).find(".mounts").text())
+					var mounts = $(this).find(".mounts").text();
+					sum = sum + price * mounts;
+				});
+				$("#sum").html(sum);//价格
+			}
+			//加入购物车
+			$(".addCart").off().click(function(){
+				
+				console.log($(this).parent("p").siblings("img").attr("src"));
+				$(".tips").hide();
+				$(".selectedGoods").show();
+				$(".selectedGoods").append('<div class="list"><img style="width: 75px;margin:18px 38px 0 38px;" src="'+$(this).parent("p").siblings("img").attr("src")+'"/><span>'+$(this).parent("p").prev("p").text()+'</span><span>价格：<i>￥</i><i class="price" style="color: red;font-size:1.6rem">'+$(this).prev("span").children("i").text().slice(1)+'</i></span><span style="font-size: 1.6rem;">数量: <i class="fa fa-minus-square-o minus"></i>&nbsp; <i class="mounts" style="font-size: 1.6rem;">1</i> &nbsp;<i class="fa fa-plus-square-o plus"></i></span></div>')
+				common();
+			})
+			
+			
+			//点击结算
+			$("#accounts").off().click(function(){
+				var sum = $("#sum").html();
+				console.log(sum)
+				if(sum == 0){
+					alert("请添加商品")
+					return
+				}
+				$("#payPage").show();
+				$("#detail").scrollTop(300);
+				countdown();
+			})
+			
+			//点击进入详情页面
+			$(".goods").click(function(){
+				$("#shopdetail").slideDown('slow');
+				$("#shoplist").slideUp('slow');
+			})
+			//点击关闭按钮
+			$("#shopdetailclose").click(function(){
+				$("#shoplist").slideDown('slow');
+				$("#shopdetail").slideUp('slow');
+				
+			})
+			//关闭付款界面
+			$("#closePayPage").click(function(){
+				$("#payPage").hide();
+			})
+			
+		</script>
+	</body>
+
+</html>
