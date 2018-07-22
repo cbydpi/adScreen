@@ -95,7 +95,7 @@
 				plus.speech.startRecognize( options, function ( s ) {
 					slidertime=0;
 					console.log(s);
-					$('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p><i class="fa fa-user-circle" style="padding: 1rem;"></i>'+s+'</p></div>');
+					$('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>'+s+'</p></div>');
 					mui('#chatbox').scroll().reLayout();
 					mui('#chatbox').scroll().scrollToBottom();
 					if (s.indexOf('拜拜')>-1) {
@@ -117,7 +117,7 @@
 				
 				plus.speech.startRecognize( options, function ( s ) {
 					slidertime=0;
-					$('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p><i class="fa fa-user-circle" style="padding: 1rem;"></i>'+s+'</p></div>');
+					$('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>'+s+'</p></div>');
 					mui('#chatbox').scroll().reLayout();
 					mui('#chatbox').scroll().scrollToBottom();
 					knowledgebase(s);
@@ -159,12 +159,14 @@
 				var data={
 					callSign:datetime,
 					chat:word,
-					user:'admin',
-					chatRole:'yonghu'
+					user:'ad',
+					chatRole:'yonghu',
+					tuLing:'true',
+					intelligent:'true'
 				}
 				$.ajax({
 					type: "post",
-					url: "http://39.105.41.93:8484/smart/api/chatTest",
+					url: "http://39.105.41.93:8484/smart/api/chatMachine",
 					async: true,
 					data: JSON.stringify(data),
 					dataType: 'json',
@@ -198,7 +200,7 @@
 				}
 				$.ajax({
 					type: "post",
-					url: "http://39.105.41.93:8484/smart/api/chatTest",
+					url: "http://39.105.41.93:8484/smart/api/chatMachine",
 					async: true,
 					data: JSON.stringify(data),
 					dataType: 'json',
@@ -339,7 +341,7 @@
 			</div>
 		</div>
 		<!--轮播结束-->
-		<i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 25%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>
+		<i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 30%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>
 
 		<div class="mui-scroll-wrapper" id="chatbox">
 			<div id="" class="mui-scroll">
@@ -347,7 +349,7 @@
 					<p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p>
 				</div>
 				<!--<div class="chatbox_right clearfix">
-					<p><i class="fa fa-user-circle" style="padding: 1rem;"></i>即可垃圾上单考虑过金坷垃就是看到了更加快乐个偶家奥斯卡进度更快了解来看</p>
+					<p>奥斯卡进度更快了解来看淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、</p>
 				</div>-->
 				
 			</div>

@@ -28,43 +28,96 @@ body {
 
 #chatbox {
 	position: absolute;
-	width: 80%;
-	height: 20%;
+	width: 100%;
+	height: 28%;
 	margin: 0;
 	padding: 0;
-	margin-left: 10%;
+
 	padding-top: 5rem;
 }
 
 .chatbox_left,
 .chatbox_right {
 	width: 100%;
+	position: relative;
 }
 
 .chatbox_left>p {
-	max-width: 70%;
+	max-width: 85%;
 	float: left;
 	color: #fff;
 	font-size: 3rem;
 	word-wrap: break-word;
 	line-height: 4rem;
-	background: #000000;
+	background: rgba(152,156,151,.8);
 	padding: 1.8rem;
 	border-radius: 2rem;
-	margin-left: .5rem;
+	margin-left: 5rem;
+
 }
 
+.chatbox_left>p:before{
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  left: 4rem;
+  top: 2rem;
+  border-right: 1rem solid rgba(152,156,151,.8);
+  border-top: 1rem solid transparent;
+  border-bottom: 1rem solid transparent;
+  
+}
+
+
+.chatbox_left>p:after{
+  position: absolute;
+  content: "";
+  width: 3rem;
+  height: 3rem;
+  left: 1rem;
+  top: 2rem;
+  background-image: url(../images/ai.png);
+  background-size: 3rem;
+}
+
+
+
 .chatbox_right>p {
-	max-width: 70%;
+	max-width: 85%;
 	float: right;
-	color: #000;
+	color: #fff;
 	font-size: 3rem;
 	word-wrap: break-word;
 	line-height: 4rem;
-	background: #fff;
+	background: rgba(100,158,236,.8);
 	padding: 1.8rem;
 	border-radius: 2rem;
 	margin-left: .5rem;
+	margin-right: 5rem;
+}
+
+.chatbox_right>p:before{
+  position: absolute;
+  content: "";
+  width: 0;
+  height: 0;
+  right: 4rem;
+  top: 2rem;
+  border-left: 1rem solid rgba(100,158,236,.8);
+  border-top: 1rem solid transparent;
+  border-bottom: 1rem solid transparent;
+}
+
+.chatbox_right>p:after{
+  position: absolute;
+  content: "";
+  width: 3rem;
+  height: 3rem;
+  right: 1rem;
+  top: 2rem;
+  background-image: url(../images/user.png);
+  background-size: 3rem;
 }
 
 .table {
