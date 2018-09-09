@@ -11,7 +11,7 @@ body {
 }
 
 body {
-	background-image: url(../images/bg1.jpg);
+	background-image: url(../images/bg.png);
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 }
@@ -45,11 +45,11 @@ body {
 .chatbox_left>p {
 	max-width: 85%;
 	float: left;
-	color: #fff;
+	color: #333;
 	font-size: 3rem;
 	word-wrap: break-word;
 	line-height: 4rem;
-	background: rgba(152,156,151,.8);
+	background: #fff;
 	padding: 1.8rem;
 	border-radius: 2rem;
 	margin-left: 5rem;
@@ -63,7 +63,7 @@ body {
   height: 0;
   left: 4rem;
   top: 2rem;
-  border-right: 1rem solid rgba(152,156,151,.8);
+  border-right: 1rem solid rgba(255,255,255,1);
   border-top: 1rem solid transparent;
   border-bottom: 1rem solid transparent;
   
@@ -86,11 +86,11 @@ body {
 .chatbox_right>p {
 	max-width: 85%;
 	float: right;
-	color: #fff;
+	color: #00bbc6;
 	font-size: 3rem;
 	word-wrap: break-word;
 	line-height: 4rem;
-	background: rgba(100,158,236,.8);
+	background: #fff;
 	padding: 1.8rem;
 	border-radius: 2rem;
 	margin-left: .5rem;
@@ -104,7 +104,7 @@ body {
   height: 0;
   right: 4rem;
   top: 2rem;
-  border-left: 1rem solid rgba(100,158,236,.8);
+  border-left: 1rem solid rgba(255,255,255,1);
   border-top: 1rem solid transparent;
   border-bottom: 1rem solid transparent;
 }
