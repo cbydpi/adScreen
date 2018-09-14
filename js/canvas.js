@@ -17,6 +17,7 @@ function SiriWave(opt){
 	this.canvas.height = this.height;
 	this.canvas.style.width = (this.width/devicePixelRatio)+'px';
 	this.canvas.style.height = (this.height/devicePixelRatio)+'px';
+
 	(this.opt.container || document.body).appendChild(this.canvas);
 	this.ctx = this.canvas.getContext('2d');
 
@@ -90,9 +91,11 @@ SiriWave.prototype = {
 };
 
 var SW = new SiriWave({
-  width: 640,
-  height: 200
+  width: 1480,
+  height: 200,
+  container: document.getElementById('siri')
 });
 SW.setSpeed(0.1);
 SW.setNoise(0.5);
 SW.start();
+SW.stop();

@@ -7,20 +7,56 @@
     <title></title>
     <script src="js/mui.min.js"></script>
     <link href="css/mui.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/jquery.mobile.min.js" type="text/javascript" charset="utf-8"></script>
+
     <script type="text/javascript" charset="utf-8">
       mui.init();
       var slidertime = 0;
-      var sayHello=false;
-      var paytime=0;
-      var returnData='';
+      var sayHello = false;
+      var paytime = 0;
+      var returnData = '';
+      var play = null;
+      var ws = null;
+      var baseURL = "ws://39.105.41.93:8282/renren-fast/";
+      //检测网络
+      window.addEventListener('online', function () {
+//      alert('online')
+        WS();
+      })
+      window.addEventListener('offline', function () {
+//      alert('offline');
+      })
+      //连接中控
+      function WS () {
+        ws = new WebSocket(baseURL + "websocket/4");
+        ws.onmessage = function (evt) {
+          var msg = JSON.parse(evt.data);
+          console.log(msg)
+          if (msg.stauts != undefined) {
+            if (msg.stauts == 0) {
+            	
+            } else if (msg.stauts == 1) {
+              beginslide();
+            } else if (msg.stauts == 2) {
+              StartInteractive();
+            }
+          }
+        }
+      }
+      WS()
+      
       //图片轮播
       function beginslide() {
+        ws.send('{"deviceId":null,"status":1,"myDevice":4}');
+        if (play != null) {
+          play.pauseSpeaking(); // 暂停播放
+          SW.stop();
+        }
         $("#slider").css("visibility", "visible").css("z-index", "999");
-        sayHello=true;
+        sayHello = true;
         var gallery = mui('.mui-slider');
         gallery.slider({
           interval: 3000, //自动轮播周期，若为0则不自动播放，默认为0；
@@ -29,106 +65,97 @@
       var slidetime = setInterval(function() {
         slidertime = slidertime + 1;
 
-        if(slidertime ==60) {
+        if(slidertime == 60) {
           beginslide();
         }
       }, 1000)
-      $(document).tap(function() {
+      function StartInteractive () {
+        ws.send('{"deviceId":null,"status":2,"myDevice":4}');
         $("#slider").css("visibility", 'hidden').css("z-index", "-1");
-        
         slidertime = 0;
-        if (sayHello==true) {
+        if(sayHello == true) {
           initialization();
-          $("#list").hide();
-          $('#detail').hide();
-          $('#shopdetail').hide();
-          $('#shoplist').hide();
-          $('#payPage').hide();
-          $('#done').hide();
           dateTime();
           startTransform('欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。')
-          sayHello=false;
+          sayHello = false;
         }
-      })
+      }
       //图片轮播结束
-      
+
       //初始化界面
-      function initialization(){
+      function initialization() {
         $("#chatbox").children('div').empty().append('<div class="chatbox_left clearfix"><p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p></div>');
         mui('#chatbox').scroll().reLayout();
         mui('#chatbox').scroll().scrollToBottom();
       }
-      
-      //会话框滚动
-      // 常用配置项
-//      function scrollbar (){
-        mui.ready(function () {
-           
-           var options = {
-               scrollY: true, //是否竖向滚动
-               scrollX: false, //是否横向滚动
-               startX: 0, //初始化时滚动至x
-               startY: 0, //初始化时滚动至y
-               indicators: true, //是否显示滚动条
-               deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
-               bounce: true, //是否启用回弹
-           }
-      
-           mui('#chatbox').scroll({
-               deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-           });
-           mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-          });
-           mui('#chatbox').scroll().scrollToBottom();
-        })
-//      }
-//      scrollbar();
 
-      function checkVoice(){
+
+      // 常用配置项
+      mui.ready(function() {
         var options = {
-          engine:'iFly',
-          userInterface:false,
-          continue:true,
-          timeout:100000
+          scrollY: true, //是否竖向滚动
+          scrollX: false, //是否横向滚动
+          startX: 0, //初始化时滚动至x
+          startY: 0, //初始化时滚动至y
+          indicators: true, //是否显示滚动条
+          deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+          bounce: true, //是否启用回弹
+        }
+
+        mui('#chatbox').scroll({
+          deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+        mui('.mui-scroll-wrapper').scroll({
+          deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+        mui('#chatbox').scroll().scrollToBottom();
+      })
+
+      function checkVoice() {
+        var options = {
+          engine: 'iFly',
+          userInterface: false,
+          continue: true,
+          timeout: 100000
         };
-        plus.speech.startRecognize( options, function ( s ) {
-          slidertime=0;
+        plus.speech.startRecognize(options, function(s) {
+          slidertime = 0;
           console.log(s);
-          $('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>'+s+'</p></div>');
+          $('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>' + s + '</p></div>');
           mui('#chatbox').scroll().reLayout();
           mui('#chatbox').scroll().scrollToBottom();
-          if (s.indexOf('拜拜')>-1) {
+          if(s.indexOf('拜拜') > -1) {
             plus.speech.stopRecognize();
           }
-        } );
+        });
       }
-      
+
       //停止语音识别plus.speech.stopRecognize()
       //语音识别
-      
-      function startRecognize () {
+
+      function startRecognize() {
         var options = {};
         options.engine = 'iFly';
         //超时时间
-//        options.timeout=5000;
-        options.userInterface=false;
-        options.continue=true;
-        
-        plus.speech.startRecognize( options, function ( s ) {
-          slidertime=0;
-          $('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>'+s+'</p></div>');
+        //options.timeout=5000;
+        options.userInterface = false;
+        options.continue = true;
+
+        plus.speech.startRecognize(options, function(s) {
+          slidertime = 0;
+          $('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>' + s + '</p></div>');
           mui('#chatbox').scroll().reLayout();
           mui('#chatbox').scroll().scrollToBottom();
           knowledgebase(s);
-        } );
+        });
       }
-      
+
       //调用知识库
-      
+
       //时间戳
       var datetime;
-      function dateTime(){
+
+      function dateTime() {
         var date = new Date();
         var month = date.getMonth() + 1;
         var day = date.getDate();
@@ -150,19 +177,20 @@
         if(second < 10) {
           second = "0" + second.toString()
         };
-        datetime=date.getFullYear().toString() + month + day + hour + minute + second;
+        datetime = date.getFullYear().toString() + month + day + hour + minute + second;
       }
       dateTime();
-      function knowledgebase (word) {
-        slidertime=0;
 
-        var data={
-          callSign:datetime,
-          chat:word,
-          user:'ad',
-          chatRole:'yonghu',
-          tuLing:'true',
-          intelligent:'true'
+      function knowledgebase(word) {
+        slidertime = 0;
+
+        var data = {
+          callSign: datetime,
+          chat: word,
+          user: 'ad',
+          chatRole: 'yonghu',
+          tuLing: 'true',
+          intelligent: 'true'
         }
         $.ajax({
           type: "post",
@@ -172,15 +200,15 @@
           dataType: 'json',
           contentType: 'application/json',
           success: function(r) {
-            slidertime=0;
-            if (r.result=='success') {
-              $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>'+r.qa[0].answer+'</p></div>');
+            slidertime = 0;
+            if(r.result == 'success') {
+              $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>' + r.qa[0].answer + '</p></div>');
               mui('#chatbox').scroll().reLayout();
               mui('#chatbox').scroll().scrollToBottom();
               startTransform(r.qa[0].answer);
-              returnData=r.qa[0].answer;
+              returnData = r.qa[0].answer;
               returnAnswer(r.qa[0].answer);
-            }else{
+            } else {
               $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p></div>');
               mui('#chatbox').scroll().reLayout();
               mui('#chatbox').scroll().scrollToBottom();
@@ -190,13 +218,13 @@
           }
         });
       }
-      
-      function returnAnswer (word){
-        var data={
-          callSign:datetime,
-          chat:word,
-          user:'admin',
-          chatRole:'kefu'
+
+      function returnAnswer(word) {
+        var data = {
+          callSign: datetime,
+          chat: word,
+          user: 'admin',
+          chatRole: 'kefu'
         }
         $.ajax({
           type: "post",
@@ -205,115 +233,59 @@
           data: JSON.stringify(data),
           dataType: 'json',
           contentType: 'application/json',
-          success: function(r) {
-          }
+          success: function(r) {}
         });
       }
 
-      
       //语音合成
       function startTransform(transformword) {
-        slidertime=0;
+        slidertime = 0;
         var receiver;
 
-                receiver = plus.android.implements('com.iflytek.cloud.SynthesizerListener', {
-                    onEvent: function(arg0, arg1, arg2, arg3) {
+        receiver = plus.android.implements('com.iflytek.cloud.SynthesizerListener', {
+          onEvent: function(arg0, arg1, arg2, arg3) {
 
-                    },
-                    onSpeakBegin: function() {
-            slidertime=0;
-                    },
-                    onSpeakPaused: function() {
-                      slidertime=0;
-                    },
-                    onSpeakResumed: function() {
-                      slidertime=0;
-                    },
-                    onBufferProgress: function(percent, beginPos, endPos, info) {
-                      slidertime=0;
-                    },
-                    onSpeakProgress: function(percent, beginPos, endPos) {
-                      slidertime=0;
-                        // 合成进度
+          },
+          onSpeakBegin: function() {
+            slidertime = 0;
+          },
+          onSpeakPaused: function() {
+            slidertime = 0;
+          },
+          onSpeakResumed: function() {
+            slidertime = 0;
+          },
+          onBufferProgress: function(percent, beginPos, endPos, info) {
+            slidertime = 0;
+          },
+          onSpeakProgress: function(percent, beginPos, endPos) {
+            slidertime = 0;
+            // 合成进度
+          },
+          onCompleted: function(error) {
+            slidertime = 0;
+            
+            if(transformword.indexOf('结束') != -1 || transformword.indexOf('再见') != -1 || transformword.indexOf('拜拜') != -1 || transformword.indexOf('没问题') != -1) {
+              return;
+            }
+            startRecognize();
 
-                    },
-                    onCompleted: function(error) {
-                      slidertime=0;
+          }
+        });
 
-                      if (transformword.indexOf('结束')!=-1 || transformword.indexOf('再见')!=-1 || transformword.indexOf('拜拜')!=-1 || transformword.indexOf('没问题')!=-1) {
-                        return;
-                      }
-                      if (transformword=='为您展示今天从北京南站到上海的所有车次信息') {
-                        dateTime();
-                        $('#list').slideDown('slow');
-                        return;
-                      }
-                      if (transformword=='北京南站候车厅有这些特产店和礼品店，您看一下。') {
-                        dateTime();
-                        $('#shoplist').slideDown('slow');
-                        return;
-                      }
-            if (transformword.indexOf('知识产权双创阶梯培训')>-1) {
-                        dateTime();
-                      }
-                        startRecognize();
-
-                    }
-                });
-        
-        
         var main = plus.android.runtimeMainActivity();
         var SpeechUtility = plus.android.importClass('com.iflytek.cloud.SpeechUtility');
-        SpeechUtility.createUtility(main,"appid=5a6ebba2");
+        SpeechUtility.createUtility(main, "appid=5a6ebba2");
         var SynthesizerPlayer = plus.android.importClass('com.iflytek.cloud.SpeechSynthesizer');
-        var play = SynthesizerPlayer.createSynthesizer(main, null);
-        play.startSpeaking(transformword,receiver);
+        play = SynthesizerPlayer.createSynthesizer(main, null);
+        play.startSpeaking(transformword, receiver);
+        SW.start();
       }
-      
-      
-      
-      
-      
-      //付款时间
-      function countdown (){
-        
-        var p=setInterval(function(){
-            paytime++;
 
-
-            if (paytime==30) {
-              $('#payPage').hide();
-              $('#done').show();
-              var lasttime=5;
-              clearInterval(p);
-              var l=setInterval(function(){
-                $('#done').children('div').find('span').html(lasttime);
-
-                lasttime--;
-                if (lasttime<0) {
-                  initialization();
-                  $("#list").hide();
-                  $('#detail').hide();
-                  $('#shopdetail').hide();
-                  $('#shoplist').hide();
-                  $('#payPage').hide();
-                  $('#done').hide();
-                  clearInterval(p);
-                  clearInterval(l);
-                  paytime=0;
-                }
-              },1000)
-
-            }
-        },1000)
-      }
-      
-      
-      
       //去掉loading
-        setTimeout(function(){$('.ui-loader').remove()},200)
-        
-      
+      setTimeout(function() {
+        $('.ui-loader').remove()
+      }, 200)
     </script>
   </head>
 
@@ -340,21 +312,25 @@
         </div>
       </div>
     </div>
+    <div class="c_bg">
+    	<img src="images/center.png"/>
+    </div>
+    <div id="siri" style="width: 1480px;position: relative;top: 1200px;height: 200px;overflow: hidden;left: -200px;z-index: 13;">
+    	
+    </div>
     <!--轮播结束-->
-    <i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 30%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>
-
+    <!--<i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 30%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>-->
     <div class="mui-scroll-wrapper" id="chatbox">
       <div id="" class="mui-scroll">
         <div class="chatbox_left clearfix">
           <p>欢迎您来到，素有“海归之家 创业乐园”之称的 海淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、各级政府及社会各届的广泛关注与认可。</p>
         </div>
-        <div class="chatbox_right clearfix">
+        <!--<div class="chatbox_right clearfix">
           <p>奥斯卡进度更快了解来看淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、</p>
-        </div>
-        
+        </div>-->
       </div>
-      
     </div>
+    <script src="js/canvas.js" type="text/javascript" charset="utf-8"></script>
   </body>
 
 </html>
