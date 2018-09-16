@@ -75,8 +75,7 @@
       }
       var slidetime = setInterval(function() {
         slidertime = slidertime + 1;
-
-        if(slidertime == 60) {
+        if(slidertime == 60 && $('#screensaver').css('display')=='none') {
           beginslide();
         }
       }, 1000)
