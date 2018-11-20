@@ -46,13 +46,26 @@
             }
           }
         }
+        ws.onerror = function (evt) {
+          console.log('evt')
+        }
+        ws.onclose = function () {
+          console.log('colse')
+        }
       }
       WS()
+      setInterval(function(){
+        if (!ws || ws.readyState != 1) {
+          WS();
+        }
+        ws.send('{"deviceId":null,"status":null,"myDevice":0,"code":0}');
+      },5000)
       //开始屏保
       function beginscreen () {
-        ws.send('{"deviceId":null,"status":0,"myDevice":2}');
+        ws.send('{"deviceId":null,"status":0,"myDevice":2,"code":666}');
         $('#screensaver').show();
-        $("#slider").css("visibility", 'hidden').css("z-index", "-1");
+        $('#slider').hide()
+//      $("#slider").css("visibility", 'hidden').css("z-index", "-1");
         if (play != null) {
           play.pauseSpeaking(); // 暂停播放
           SW.stop();
@@ -60,17 +73,18 @@
       }
       //图片轮播
       function beginslide() {
-        ws.send('{"deviceId":null,"status":1,"myDevice":2}');
+        ws.send('{"deviceId":null,"status":1,"myDevice":2,"code":666}');
         $('#screensaver').hide();
+        $('#slider').show();
         if (play != null) {
           play.pauseSpeaking(); // 暂停播放
           SW.stop();
         }
-        $("#slider").css("visibility", "visible").css("z-index", "999");
+//      $("#slider").css("visibility", "visible").css("z-index", "999");
         sayHello = true;
         var gallery = mui('.mui-slider');
         gallery.slider({
-          interval: 3000, //自动轮播周期，若为0则不自动播放，默认为0；
+          interval: 20000, //自动轮播周期，若为0则不自动播放，默认为0；
         });
       }
       var slidetime = setInterval(function() {
@@ -80,9 +94,10 @@
         }
       }, 1000)
       function StartInteractive () {
-        ws.send('{"deviceId":null,"status":2,"myDevice":2}');
+        ws.send('{"deviceId":null,"status":2,"myDevice":2,"code":666}');
         $('#screensaver').hide();
-        $("#slider").css("visibility", 'hidden').css("z-index", "-1");
+        $('#slider').hide();
+//      $("#slider").css("visibility", 'hidden').css("z-index", "-1");
         slidertime = 0;
         if(sayHello == true) {
           initialization();
@@ -364,13 +379,10 @@ SiriWave.prototype = {
     this.phase = 0;
     this.run = true;
     this._draw();
-    console.log(this);
-    console.log('canvas start');
   },
 
   stop: function(){
     this.run = false;
-    console.log('canvas stop');
   },
 
   setNoise: function(v){
@@ -409,15 +421,15 @@ SW.stop();
 
   <body>
     <!--屏保-->
-    <div id="screensaver" style="position: fixed;left:0;top:0;overflow:hidden;width: 100%;height: 100%;background: #00f;z-index: 999;">
-      <img style="width: 100%;height: 100%;" src="images/screensaver.gif"/>
+    <div id="screensaver" style="position: fixed;left:0;top:0;overflow:hidden;width: 100%;height: 100%;background-color: #000000;background-image: url('');background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;z-index: 999;">
+      
     </div>
     <!--图片轮播-->
-    <div id="slider" class="mui-slider" style="visibility: hidden;z-index: -1;position: fixed;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;">
+    <div id="slider" class="mui-slider" style="z-index: 999;position: fixed;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;display: none;">
       <div class="mui-slider-group mui-slider-loop" class="full">
         <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
         <div class="mui-slider-item mui-slider-item-duplicate">
-          <a href="#" class="full"><img src="images/banner5.jpg" class="full"></a>
+          <a href="#" class="full"><img src="images/banner4.jpg" class="full"></a>
         </div>
         <div class="mui-slider-item">
           <a href="#" class="full"><img src="images/banner1.jpg" class="full"></a>
@@ -430,9 +442,6 @@ SW.stop();
         </div>
         <div class="mui-slider-item">
           <a href="#" class="full"><img src="images/banner4.jpg" class="full"></a>
-        </div>
-        <div class="mui-slider-item">
-          <a href="#" class="full"><img src="images/banner5.jpg" class="full"></a>
         </div>
         <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
         <div class="mui-slider-item mui-slider-item-duplicate">
@@ -458,6 +467,8 @@ SW.stop();
         </div>-->
       </div>
     </div>
+    <script src="js/particles.min.js"></script>
+    <script src="js/app.js"></script>
   </body>
 
 </html>
