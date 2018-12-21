@@ -14,7 +14,7 @@
 
     <script type="text/javascript" charset="utf-8">
       mui.init();
-    mui.ready(function () {
+      var SW
       var slidertime = 0;
       var sayHello = false;
       var paytime = 0;
@@ -25,7 +25,7 @@
       //检测网络
       window.addEventListener('online', function () {
 //      alert('online')
-        WS();
+//      WS();
       })
       window.addEventListener('offline', function () {
 //      alert('offline');
@@ -53,13 +53,13 @@
           console.log('colse')
         }
       }
-      WS()
-      setInterval(function(){
-        if (!ws || ws.readyState != 1) {
-          WS();
-        }
-        ws.send('{"deviceId":null,"status":null,"myDevice":0,"code":0}');
-      },5000)
+//    WS()
+//    setInterval(function(){
+//      if (!ws || ws.readyState != 1) {
+//        WS();
+//      }
+//      ws.send('{"deviceId":null,"status":null,"myDevice":null,"code":0}');
+//    },5000)
       //开始屏保
       function beginscreen () {
         ws.send('{"deviceId":null,"status":0,"myDevice":2,"code":666}');
@@ -87,12 +87,12 @@
           interval: 20000, //自动轮播周期，若为0则不自动播放，默认为0；
         });
       }
-      var slidetime = setInterval(function() {
-        slidertime = slidertime + 1;
-        if(slidertime == 60 && $('#screensaver').css('display')=='none') {
-          beginslide();
-        }
-      }, 1000)
+//    var slidetime = setInterval(function() {
+//      slidertime = slidertime + 1;
+//      if(slidertime == 60) {
+////        initialization();
+//      }
+//    }, 1000)
       function StartInteractive () {
         ws.send('{"deviceId":null,"status":2,"myDevice":2,"code":666}');
         $('#screensaver').hide();
@@ -110,6 +110,7 @@
 
       //初始化界面
       function initialization() {
+        dateTime();
         $("#chatbox").children('div').empty().append('<div class="chatbox_left clearfix"><p>您好,很高兴为您服务</p></div>');
         mui('#chatbox').scroll().reLayout();
         mui('#chatbox').scroll().scrollToBottom();
@@ -213,14 +214,11 @@
         var data = {
           callSign: datetime,
           chat: word,
-          user: 'ad',
-          chatRole: 'yonghu',
-          tuLing: 'true',
-          intelligent: 'true'
+          user: 'admin'
         }
         $.ajax({
           type: "post",
-          url: "http://39.105.41.93:8484/smart/api/chatMachine",
+          url: "http://47.95.205.128:8081/smart/chat/screen",
           async: true,
           data: JSON.stringify(data),
           dataType: 'json',
@@ -228,18 +226,15 @@
           success: function(r) {
             slidertime = 0;
             if(r.result == 'success') {
-              $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>' + r.qa[0].answer + '</p></div>');
+              $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>' + r.answer + '</p></div>');
               mui('#chatbox').scroll().reLayout();
               mui('#chatbox').scroll().scrollToBottom();
-              startTransform(r.qa[0].answer);
-              returnData = r.qa[0].answer;
-              returnAnswer(r.qa[0].answer);
+              startTransform(r.answer);
             } else {
-              $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>您好,很高兴为您服务</p></div>');
+              $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。</p></div>');
               mui('#chatbox').scroll().reLayout();
               mui('#chatbox').scroll().scrollToBottom();
               startTransform('很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。');
-              returnAnswer('很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。');
             }
           }
         });
@@ -308,6 +303,8 @@
         play.startSpeaking(transformword, receiver);
         SW.start();
       }
+      
+    mui.ready(function () {
       
 function SiriWave(opt){
   this.opt = opt || {};
@@ -400,8 +397,8 @@ SiriWave.prototype = {
 
 };
 
-var SW = new SiriWave({
-  width: 1480,
+SW = new SiriWave({
+  width: 1280,
   height: 200,
   container: document.getElementById('siri')
 });
@@ -409,21 +406,52 @@ SW.setSpeed(0.1);
 SW.setNoise(0.5);
 SW.start();
 SW.stop();
-
+})
 
       //去掉loading
       setTimeout(function() {
         $('.ui-loader').remove()
       }, 200)
-    })
+
     </script>
+    <style type="text/css">
+      .an {
+        cursor: pointer;
+        -webkit-animation: scaleout 3s infinite ease-in-out;
+        animation: scaleout 3s infinite ease-in-out;
+        width: 6rem;
+      }
+      
+      @-webkit-keyframes scaleout {
+        0% {
+          -webkit-transform: scale(1.0);
+        }
+        50% {
+          -webkit-transform: scale(1.2);
+        }
+        100% {
+          -webkit-transform: scale(1.0);
+        }
+      }
+      
+      @keyframes scaleout {
+        0% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+        }
+        50% {
+          transform: scale(1.2);
+          -webkit-transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <!--屏保-->
-    <div id="screensaver" style="position: fixed;left:0;top:0;overflow:hidden;width: 100%;height: 100%;background-color: #000000;background-image: url('');background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;z-index: 999;">
-      
-    </div>
     <!--图片轮播-->
     <div id="slider" class="mui-slider" style="z-index: 999;position: fixed;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;display: none;">
       <div class="mui-slider-group mui-slider-loop" class="full">
@@ -451,12 +479,15 @@ SW.stop();
     </div>
     <div class="c_bg">
     	<img src="images/center.png"/>
+    	<h3 style="color: #ffffff;text-align: center;font-weight: normal;font-size: 42px;">语音对话模式</h3>
     </div>
-    <div id="siri" style="width: 1480px;position: relative;top: 1200px;height: 200px;overflow: hidden;left: -200px;z-index: 13;">
+    <div id="siri" style="width: 1280px;position: relative;top: 1200px;height: 200px;overflow: hidden;z-index: 13;">
     	
     </div>
     <!--轮播结束-->
-    <!--<i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 30%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>-->
+    <span style="font-size: 8rem!important;position: absolute;top: 55%;right: 11%;z-index: 888;transform: rotate(0deg);"><img src="images/hand.png"/ class="an"></span>
+    <i class="fa fa-microphone" style="color: #fff;font-size: 8rem!important;position: absolute;top: 50%;right: 12%;z-index: 888;" onclick="startRecognize()"></i>
+    <span style="font-size: 8rem!important;position: absolute;top: 50%;right: 1%;z-index: 888;"><img src="images/clear2.png"/ style="width: 5.3rem;" onclick="initialization()"></span>
     <div class="mui-scroll-wrapper" id="chatbox">
       <div id="" class="mui-scroll">
         <div class="chatbox_left clearfix">
@@ -467,8 +498,6 @@ SW.stop();
         </div>-->
       </div>
     </div>
-    <script src="js/particles.min.js"></script>
-    <script src="js/app.js"></script>
   </body>
 
 </html>
