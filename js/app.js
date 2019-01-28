@@ -15,7 +15,7 @@ particlesJS('screensaver',
     "shape": {
       "type": "circle", //原子的形状 "circle" ,"edge" ,"triangle" ,"polygon" ,"star" ,"image" ,["circle", "triangle", "image"]
       "stroke": {
-        "width": 2, //原子的宽度
+        "width": 20, //原子的宽度
         "color": "#7ecef4" //原子颜色
       },
       "polygon": {
