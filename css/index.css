@@ -11,7 +11,7 @@ body {
 }
 
 body {
-  background-image: url(../images/bg.png);
+  background-image: url(../images/bg1.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   overflow: hidden;
@@ -45,14 +45,14 @@ body {
 .chatbox_left>p {
   max-width: 85%;
   float: left;
-  color: #333;
+  color: #555;
   font-size: 3rem;
   word-wrap: break-word;
   line-height: 4rem;
   background: #fff;
   padding: 1.8rem;
-  border-radius: 2rem;
-  margin-left: 5rem;
+  border-radius: 6px;
+  margin-left: 7.5rem;
 }
 
 .chatbox_left>p:before {
@@ -60,7 +60,7 @@ body {
   content: "";
   width: 0;
   height: 0;
-  left: 4rem;
+  left: 6.6rem;
   top: 2rem;
   border-right: 1rem solid rgba(255, 255, 255, 1);
   border-top: 1rem solid transparent;
@@ -70,26 +70,26 @@ body {
 .chatbox_left>p:after {
   position: absolute;
   content: "";
-  width: 3rem;
-  height: 3rem;
+  width: 5rem;
+  height: 5rem;
   left: 1rem;
-  top: 2rem;
+  top: 1rem;
   background-image: url(../images/ai.png);
-  background-size: 3rem;
+  background-size: 5rem;
 }
 
 .chatbox_right>p {
   max-width: 85%;
   float: right;
-  color: #00bbc6;
+  color: #555;
   font-size: 3rem;
   word-wrap: break-word;
   line-height: 4rem;
   background: #fff;
   padding: 1.8rem;
-  border-radius: 2rem;
+  border-radius: 6px;
   margin-left: .5rem;
-  margin-right: 5rem;
+  margin-right: 7.5rem;
 }
 
 .chatbox_right>p:before {
@@ -97,8 +97,8 @@ body {
   content: "";
   width: 0;
   height: 0;
-  right: 4rem;
-  top: 2rem;
+  right: 6.6rem;
+  top: 1rem;
   border-left: 1rem solid rgba(255, 255, 255, 1);
   border-top: 1rem solid transparent;
   border-bottom: 1rem solid transparent;
@@ -107,12 +107,12 @@ body {
 .chatbox_right>p:after {
   position: absolute;
   content: "";
-  width: 3rem;
-  height: 3rem;
+  width: 5rem;
+  height: 5rem;
   right: 1rem;
-  top: 2rem;
+  top: 0rem;
   background-image: url(../images/user.png);
-  background-size: 3rem;
+  background-size: 5rem;
 }
 .c_bg {
   position: absolute;
