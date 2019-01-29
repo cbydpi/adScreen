@@ -1,10 +1,10 @@
 @font-face {font-family: "iconfont";
-  src: url('iconfont.eot?t=1548744247239'); /* IE9 */
-  src: url('iconfont.eot?t=1548744247239#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAMYAAsAAAAABvAAAALLAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcAqBdIF2ATYCJAMICwYABCAFhG0HOBskBsiOw7ixa2ZOBvEYDw96Ue8nGWVWUCUpC+qsUmqhogFdXj3H389bBuCBrJIqqfnHvfczhWcylPk8l9O7q4ACmR8olzkmTeoFGAcU2J5WFFmBFAA3jF3gEm4TyHUzREyfeXtCWcZaFIh9u7kA5VxYJmO5qlCu2ZmJe5RUk1uTd3F3+Pn4x6iokiilrIbFxV6G1e8T7IL0UuOS9T4hQkD7S0gxBBmxvDa9UE4wZipP5/ViX7XB7xMaDd8q9vrniTKrugnoAsX3JHGlt/rLBGSoYT6wf1SAWtibK02btoxm6/JHX3uj82PP3/bs/jhw+fVXl9MGLj13+wudoyqx/NHn6nV4/uXn++VPPrv3csTnn6/89NPlyWefrfjii1UrX1RY0iwXk3/uPrB84kRR0ZtNa+Mx3fjk/+tWRat3y+IU7yiuPBFFy695wlcx9pck0uWHrGdmRRw+7BWOyy89ZD4ytsBfkV+6tLh/ZGvpOe0NH0AQP7Ck2Proc/efipPx/AOtjlgBNB5MB6S/6VvBox9ecja1xv9frWfgyxPtZ2Gw8WCmnxdUb8cT/FZJz55Ml1mWJFMltfnEfJXbbcrlaMD+Vr4fq2/7Ds5QzUkYEhVdkarqQ2aMISipG4OyqknIDTZrf11rR+REVsMg1wFCC68g0cw7SLXwHpkxvkNJO/+hrEWkyK2M1ifW9Yvd+bQjJAQko3ga1W22xRxbUI1q78RDQ/CyspD1Js9XYzgYNqKYO5JF3hxr/BN8GBxjyI7YJh7AfWQYNjpHbI2koKscC5xlb3hR96KudNCEqmk8RBAgMrRVCu0msVmYPzhQLb3/jnAhg8Br6arxvxGPTx0djTTMiB7kUW316rqXZ46KcEPHBBhU8NhMaCZwEsNO29Ch+mkaIgl07RqRdCwNR/2Kvuru+lrz6w5BzjIkYa9INTu2W7AkxbZ4orquDgAA') format('woff2'),
-  url('iconfont.woff?t=1548744247239') format('woff'),
-  url('iconfont.ttf?t=1548744247239') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
-  url('iconfont.svg?t=1548744247239#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1548774151040'); /* IE9 */
+  src: url('iconfont.eot?t=1548774151040#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAUQAAsAAAAAChAAAATEAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDSAqGcIVbATYCJAMYCw4ABCAFhG0HbBulCBGVnJnJfg64rTG5EpXxxZyyf8OORa51Iz1BmMxxPHztx+/c3fv2q+EWf0M0uSRNJklsujamM52hEyIRsngm/601a59JR5ii7LwDVmj3KAs8uWxBOPE/n5e9P+NkxNbpgqyYycoFmLTO7KkQTwt5sOZRCPj/uRxfizbY/FbbZcxle/BR7yiOAwporKGBBVggcYKagnpNMQGXTxPot8QmscfTn4ReyZkUiKtREbugt+SUPYzQa2ktKxPiJXR6SwXnOgy8iD8f/2AeIlB0FZyzDoev3ws73hLv3nLp/7TzXAaerOeHtI6KTUjiQWvwPtQ0vUnVb/xC2gsM6lXkT+Lt1rc733q+a/z/H5S0TjQMun95hE4qKtEAxkFG3J/p+En4dmGYlkPZZloNu4TJEzwKvxpNLt3aVhwxTcyAuAAOeRFjeVSFVd/KKRoxGhRSJBbpxcjdTyiVKpEsh67XkNXdGHsSMU36qbEYcwrHp9Q2okZzj9ZU07AZk4T9BiCHzCfo45gEgkPYXt3uKQxCtbWI3zSkr6vDlR2H5Viek1ZrSLtlmf3zSuuA/dUG28u9qymAjScvnKPoPm7gNZwYr+w75chvPElWW5ZZ+lnSQg4b+Cas4YT5FHOSPb4D4UgKA46z/eAddt7iRjdosYM3XbjMIIbkGw+coE+zZ223tmANR445Ng6y/XEiyBw9PLr3kwHzkCNqHCQbBnBcL2YGJ2Dd/TEHn2ezURYLybFaTXb7Bsqky2smUpmzCp2WVVcUFNT7yJwJ52wY0etMLCGce4mKamrzqe+Q0WGnZtONWes/SNTwxLTTq5SDMOG6lacIiG5djvg0d8ebsBd8kB+DZXXZg3R7mYNw0JP9euec7unDKfe0bHDc+4DbJHNlYd8Pv6BiRfnK8hUVx10T0gpFbSxsfg43n2fIEmUZz+Pj13g6O/o7x7FvK2PmUlMW+zL/4dKQtyxjhXsnfNpEFU3fNr2ImlakLlcfWmykvX2Eknl+B1fJeULasEFi2rrqvy8WFx85fHWdLEhPF8AVj/C1iqzPjIyMNw9V4SpKWR0CJ1F4YTMKV1bZO7yBK0sOczhQjyfGk8iEkpKCwqW80MS4MOTKwhm80FBB3Gx5aG40BaeAyNI1IQJ1ykBVJspAg9Wq5Od/5hydUJ96QZ0t/8zV1En15z/8jpvvb3mK8/v/vQMJviz3t1g7L9OrMFr116lGNqWpcVwtdXR/jEBzwOGL8dPvtvCvRcc9Xcs8NTpJ6C2pJCh6LIaq1yokiZugM2AWml7bod9GXusHTEi2LbIPG5QQCKPGoBj2EapRN5AkPoHOtC/QjMY29DsZ1zsOWBPm6IGwZuyg2YBpU5Seh4+S2i9UxddU1MTMP6TexGA2nlZzLxiR1pjTL9WcWYKkFOCZnIfeJ8iULLY81sx5MZnItieN2xQGR3YjqMZQB+y2AaK0kkiG7dlR7f1fkFJ4NepBNaT/INIz3YPZZpg1AnkxxlGoZ+mfYkmZS8UkGxeOJAHwhB95N52AxPZhFmqxscgZyWxhJsUKH2sc728Od7kD+jmHtyhRI6OLFj3a3WJaXa4/H8Ql6ER+f81CGu/FbD+blgvhga+t4RTVGZs6tjq1rY0fGA0A') format('woff2'),
+  url('iconfont.woff?t=1548774151040') format('woff'),
+  url('iconfont.ttf?t=1548774151040') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1548774151040#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
@@ -13,6 +13,22 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-exit:before {
+  content: "\e622";
+}
+
+.icon-chat:before {
+  content: "\e646";
+}
+
+.icon-pic:before {
+  content: "\e79a";
+}
+
+.icon-lajitong:before {
+  content: "\e641";
 }
 
 .icon-voice:before {

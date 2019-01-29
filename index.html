@@ -20,9 +20,74 @@
         var SW;
         var policyData;
         var baseURL = "http://39.105.41.93:8383/nature/";
+        document.addEventListener('touchstart',function () {
+          slidertime = 0
+        })
+        function exitApp () {
+          mui.prompt(
+            '请输入密码',
+            '请输入密码',
+            '提示',
+            ['确定', '取消'], function(e){
+              console.log(e.index)
+              if (e.index == 0) {
+                if (e.value == 123456) {
+                  plus.runtime.quit();
+                } else{
+                  mui.toast(
+                    '密码输入错误！'
+                  )
+                }
+                console.log(e.value)
+              }
+            }
+          )
+//        
+        }
+        var mouseX, mouseY;
+        var objX, objY;
+        var isDowm = false;
+        function mouseDown(obj, e) {
+          var div = document.getElementById("mov");  
+          obj.style.cursor = "move";  
+          objX = div.offsetLeft;
+          objY = div.offsetTop;
+          mouseX = e.changedTouches[0].clientX;  
+          mouseY = e.changedTouches[0].clientY;  
+          isDowm = true;  
+        }  
+        function mouseMove(e) {
+            var div = document.getElementById("mov");  
+            var x = e.changedTouches[0].clientX;  
+            var y = e.changedTouches[0].clientY;
+            if (isDowm) {
+                div.style.right = parseInt(objX) - parseInt(x)  + "px";  
+                div.style.top = parseInt(objY) + parseInt(y) - parseInt(mouseY) + "px";  
+            }
+        }
+        function mouseUp(e) {  
+            if (isDowm) {
+                var x = e.changedTouches[0].clientX;  
+                var y = e.changedTouches[0].clientY;  
+                var div = document.getElementById("mov");  
+                div.style.right = "0px";  
+                div.style.top = parseInt(objY) + parseInt(y) - parseInt(mouseY) + "px";  
+                div.style.cursor = "default";  
+                isDowm = false;  
+            }  
+        }
+        
+        function toggleButton () {
+          if ($('#mov').children('div').css('display') == 'none') {
+            $('#mov').children('div').show()
+          } else{
+            $('#mov').children('div').hide()
+          }
+        }
 
         //图片轮播
         function beginslide() {
+          $('#policyInfo').hide();
           $('#slider').show();
           if(play != null) {
             play.pauseSpeaking(); // 暂停播放
@@ -31,7 +96,7 @@
           sayHello = true;
           var gallery = mui('.mui-slider');
           gallery.slider({
-            interval: 3000, //自动轮播周期，若为0则不自动播放，默认为0；
+            interval: 30000, //自动轮播周期，若为0则不自动播放，默认为0；
           });
         }
         var slidetime = setInterval(function() {
@@ -43,14 +108,15 @@
 
         function StartInteractive() {
           $('#slider').hide();
+          $('#policyInfo').hide();
 
           slidertime = 0;
-          if(sayHello == true) {
+
             initialization();
             dateTime();
             startTransform('您好,很高兴为您服务')
-            sayHello = false;
-          }
+
+
         }
         //图片轮播结束
 
@@ -70,7 +136,6 @@
             dataType: 'json',
             async: false,
             success: function(data) {
-              console.log(data)
               if (data.code === 0) {
                 if (data.policy.length > 0) {
                   policyData = data.policy
@@ -78,11 +143,9 @@
                   var tempAfter = '</div>'
                   var temp = '<div class="full policy_bg"><div class="policy_scroll">'
                   for (var i = 0; i < policyData.length; i++) {
-                    console.log(i)
                     temp += '<div class="policy_content" onclick="policyContent('+policyData[i].id+')"><h3 style="color: #9662bb;">' + policyData[i].name + '</h3><p>' + policyData[i].uploadDate + '</p></div>'
                   }
                   temp += '</div></div>'
-                  console.log(temp)
                   $('.mui-slider-item').eq(0).after(tempBefore+temp+tempAfter)
                   $('.mui-slider-item-duplicate').last().html(temp)
                 }
@@ -132,17 +195,21 @@
         function policyContent (id) {
           for (var i = 0; i < policyData.length; i++) {
             if (id = policyData[i].id) {
-              var temp = '<table style="width: 80%;text-align: center;"><tr><th>政策标题</th><th>'+policyData[i].name+'</th></tr>'
-              console.log(policyData[i].contentList)
+              var temp = '<h3 class="close" onclick="closePolicyInfo()">X</h3><table border="" style="width: 80%;text-align: center;"><tr><th>政策标题</th><th>'+policyData[i].name+'</th></tr>'
               for (var j = 0; j < policyData[i].contentList.length; j++) {
-                console.log(j)
                 temp += '<tr><td>'+policyData[i].contentList[j].paramSign+'</td><td>'+policyData[i].contentList[j].content+'</td></tr>'
               }
               temp += '</table>'
               $('#policyInfo').html(temp)
               $('#policyInfo').show()
+              $('#slider').hide()
             }
           }
+        }
+        
+        function closePolicyInfo () {
+          $('#slider').show()
+          $('#policyInfo').hide()
         }
 
         //停止语音识别plus.speech.stopRecognize()
@@ -198,14 +265,12 @@
           var data = {
             callSign: datetime,
             chat: word,
-            user: 'ad',
-            chatRole: 'yonghu',
-            tuLing: 'true',
-            intelligent: 'true'
+            user: 'admin',
+            chatResource: 'list'
           }
           $.ajax({
             type: "post",
-            url: "http://39.105.41.93:8484/smart/api/chatMachine",
+            url: "http://wx.ofaai.com:8383/nature/wx/smart",
             async: true,
             data: JSON.stringify(data),
             dataType: 'json',
@@ -213,18 +278,15 @@
             success: function(r) {
               slidertime = 0;
               if(r.result == 'success') {
-                $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>' + r.qa[0].answer + '</p></div>');
+                $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>' + r.answer + '</p></div>');
                 mui('#chatbox').scroll().reLayout();
                 mui('#chatbox').scroll().scrollToBottom();
-                startTransform(r.qa[0].answer);
-                returnData = r.qa[0].answer;
-                returnAnswer(r.qa[0].answer);
+                startTransform(r.answer);
               } else {
-                $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>您好,很高兴为您服务</p></div>');
+                $('#chatbox').children('div').append('<div class="chatbox_left clearfix"><p>很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。</p></div>');
                 mui('#chatbox').scroll().reLayout();
                 mui('#chatbox').scroll().scrollToBottom();
                 startTransform('很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。');
-                returnAnswer('很抱歉，奥法智能知识库目前没有学习到此问题。您可以拨打人工服务热线：400-666-8800。感谢您的咨询。我们会记录此问题，并邀请专业人员补足答案。');
               }
             }
           });
@@ -284,10 +346,10 @@
 
             }
           });
-
+          console.log(transformword)
           var main = plus.android.runtimeMainActivity();
           var SpeechUtility = plus.android.importClass('com.iflytek.cloud.SpeechUtility');
-          SpeechUtility.createUtility(main, "appid=5a6ebba2");
+          SpeechUtility.createUtility(main, "appid=53feacdd");
           var SynthesizerPlayer = plus.android.importClass('com.iflytek.cloud.SpeechSynthesizer');
           play = SynthesizerPlayer.createSynthesizer(main, null);
           play.startSpeaking(transformword, receiver);
@@ -392,11 +454,30 @@
   </head>
 
   <body>
+    <!--浮动点-->
+    <div id="mov" style="background: rgba(230,230,230,.6);width: 5rem;height: 5rem;border-radius: 50%;position: absolute;z-index: 999;;top: 20%;right: 0;" ontouchstart="mouseDown(this,event)" ontouchmove="mouseMove(event)" ontouchend="mouseUp(event)" onclick="toggleButton()">
+      <div style="text-align:center;position: absolute;width: 15rem;line-height: 3rem;background: #fff;border-radius: 15px;right: 5rem;display: none;">
+        <div class="inline" onclick="beginslide()">
+          <i class="iconfont icon-pic" style="font-size: 3rem;"></i>
+          <p>轮播</p>
+        </div>
+        <div class="inline" onclick="StartInteractive()">
+          <i class="iconfont icon-chat" style="font-size: 3rem;"></i>
+          <p>咨询</p>
+        </div>
+        <div class="inline" onclick="initialization()">
+          <i class="iconfont icon-lajitong" style="font-size: 4rem;"></i>
+          <p>清屏</p>
+        </div>
+        <div class="inline" onclick="exitApp()">
+          <i class="iconfont icon-exit" style="font-size: 3rem;"></i>
+          <p>退出</p>
+        </div>
+      </div>
+    </div>
+    
+    <!--政策详情-->
     <div id="policyInfo">
-      <table style="width: 80%;text-align: center;">
-      	<tr><th>政策标题</th><th>Header</th></tr>
-      	<tr><td>Data</td><td>政策内容</td></tr>
-      </table>
     </div>
     
     <!--图片轮播-->
@@ -430,15 +511,8 @@
         </div>
         <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
         <div class="mui-slider-item mui-slider-item-duplicate">
-          <div class="full policy_bg">
-            <div class="policy_scroll">
-              <div class="policy_content">
-                <p>2019-01-25 15:54:19</p>
-                <h3 style="color: #9662bb;">政策标题</h3>
-                <p>申报时间：</p>
-                <p>政策支持：</p>
-              </div>
-            </div>
+          <div class="full" style="background: #000;font-size: 3rem;height: 1920px;">
+            <img src="images/banner4.jpg"/>
           </div>
         </div>
       </div>
@@ -456,9 +530,9 @@
         <div class="chatbox_left clearfix">
           <p>您好,很高兴为您服务</p>
         </div>
-        <div class="chatbox_right clearfix">
+        <!--<div class="chatbox_right clearfix">
           <p>奥斯卡进度更快了解来看淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人</p>
-        </div>
+        </div>-->
       </div>
     </div>
   </body>
