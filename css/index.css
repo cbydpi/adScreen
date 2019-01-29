@@ -1,17 +1,19 @@
 * {
+  
+}
+
+html{
   margin: 0px;
   padding: 0px;
   font-size: 62.5%;
-}
-
-html,
-body {
   height: 100%;
   width: 100%;
 }
-
 body {
-  background-image: url(../images/bg1.png);
+  height: 100%;
+  width: 100%;
+  font-size: 3rem!important;
+  background-image: url(../images/bg.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   overflow: hidden;
@@ -61,7 +63,7 @@ body {
   width: 0;
   height: 0;
   left: 6.6rem;
-  top: 2rem;
+  top: 1rem;
   border-right: 1rem solid rgba(255, 255, 255, 1);
   border-top: 1rem solid transparent;
   border-bottom: 1rem solid transparent;
@@ -73,7 +75,7 @@ body {
   width: 5rem;
   height: 5rem;
   left: 1rem;
-  top: 1rem;
+  top: 0rem;
   background-image: url(../images/ai.png);
   background-size: 5rem;
 }
@@ -98,7 +100,7 @@ body {
   width: 0;
   height: 0;
   right: 6.6rem;
-  top: 1rem;
+  top: 0.8rem;
   border-left: 1rem solid rgba(255, 255, 255, 1);
   border-top: 1rem solid transparent;
   border-bottom: 1rem solid transparent;
@@ -116,7 +118,50 @@ body {
 }
 .c_bg {
   position: absolute;
-  top: 870px;
+  width: 100%;
+  top: 45%;
   z-index: 14;
 }
-
+.c_bg>img{
+  width: 100%;
+}
+.policy_bg{
+  background: url('../images/banner2.jpg');
+  height: 1920px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.policy_scroll{
+  padding: 22% 20% 0 20%;
+  max-height: 75%;
+  overflow: scroll;
+}
+.policy_content{
+  font-size: 3rem;
+  padding: 2% 0;
+  border-bottom: solid 1px #ccc;
+}
+.policy_content>h3{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#policyInfo{
+  position: fixed;
+  left:0;
+  top:0;
+  overflow:hidden;
+  width: 100%;
+  height: 100%;
+  background-color: #ff0;
+  background-image: url('');
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  z-index: 999;
+  display: none;
+  padding: 5%;
+}
+td{
+  text-align: center;
+}

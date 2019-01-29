@@ -8,99 +8,42 @@
     <script src="js/mui.min.js"></script>
     <link href="css/mui.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont/iconfont.css"/>
     <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/jquery.mobile.min.js" type="text/javascript" charset="utf-8"></script>
-
     <script type="text/javascript" charset="utf-8">
       mui.init();
-      mui.ready(function() {
-        var video = null;
+
         var slidertime = 0;
         var sayHello = false;
-        var paytime = 0;
         var returnData = '';
         var play = null;
-        var ws = null;
-        var baseURL = "ws://39.105.41.93:8282/renren-fast/";
-        var wsId = 2
-        //检测网络
-        window.addEventListener('online', function() {
-          //      alert('online')
-          WS();
-        })
-        window.addEventListener('offline', function() {
-          //      alert('offline');
-        })
-        //连接中控
-        function WS() {
-          ws = new WebSocket(baseURL + "websocket/2");
-          ws.onmessage = function(evt) {
-            var msg = JSON.parse(evt.data);
-            console.log(msg)
-            if(msg.stauts != undefined) {
-              if(msg.stauts == 0) {
-                beginscreen();
-              } else if(msg.stauts == 1) {
-                beginslide();
-              } else if(msg.stauts == 2) {
-                StartInteractive();
-              }
-            }
-          }
-          ws.onerror = function(evt) {
-            console.log('evt')
-          }
-          ws.onclose = function() {
-            console.log('colse')
-          }
-        }
-        WS()
-        setInterval(function() {
-          if(!ws || ws.readyState != 1) {
-            WS();
-          }
-          ws.send('{"deviceId":null,"status":null,"myDevice":0,"code":0}');
-        }, 5000)
-        //开始屏保
-        function beginscreen() {
-          ws.send('{"deviceId":null,"status":0,"myDevice":2,"code":666}');
-          $('#screensaver').show();
-          $('#slider').hide()
-          //      $("#slider").css("visibility", 'hidden').css("z-index", "-1");
-          if(play != null) {
-            play.pauseSpeaking(); // 暂停播放
-            SW.stop();
-          }
-        }
+        var SW;
+        var policyData;
+        var baseURL = "http://39.105.41.93:8383/nature/";
+
         //图片轮播
         function beginslide() {
-          ws.send('{"deviceId":null,"status":1,"myDevice":2,"code":666}');
-          $('#screensaver').hide();
           $('#slider').show();
           if(play != null) {
             play.pauseSpeaking(); // 暂停播放
             SW.stop();
           }
-          //      $("#slider").css("visibility", "visible").css("z-index", "999");
           sayHello = true;
           var gallery = mui('.mui-slider');
           gallery.slider({
-            interval: 5000, //自动轮播周期，若为0则不自动播放，默认为0；
+            interval: 3000, //自动轮播周期，若为0则不自动播放，默认为0；
           });
         }
         var slidetime = setInterval(function() {
           slidertime = slidertime + 1;
-          if(slidertime == 60 && $('#screensaver').css('display') == 'none') {
+          if(slidertime == 60 && $('#slider').css('display') == 'none') {
             beginslide();
           }
         }, 1000)
 
         function StartInteractive() {
-          ws.send('{"deviceId":null,"status":2,"myDevice":2,"code":666}');
-          $('#screensaver').hide();
           $('#slider').hide();
-          //      $("#slider").css("visibility", 'hidden').css("z-index", "-1");
+
           slidertime = 0;
           if(sayHello == true) {
             initialization();
@@ -120,6 +63,47 @@
 
         // 常用配置项
         mui.ready(function() {
+          //政策列表请求
+          $.ajax({
+            type: "get",
+            url: baseURL + "wx/listPolicy",
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+              console.log(data)
+              if (data.code === 0) {
+                if (data.policy.length > 0) {
+                  policyData = data.policy
+                  var tempBefore = '<div class="mui-slider-item">'
+                  var tempAfter = '</div>'
+                  var temp = '<div class="full policy_bg"><div class="policy_scroll">'
+                  for (var i = 0; i < policyData.length; i++) {
+                    console.log(i)
+                    temp += '<div class="policy_content" onclick="policyContent('+policyData[i].id+')"><h3 style="color: #9662bb;">' + policyData[i].name + '</h3><p>' + policyData[i].uploadDate + '</p></div>'
+                  }
+                  temp += '</div></div>'
+                  console.log(temp)
+                  $('.mui-slider-item').eq(0).after(tempBefore+temp+tempAfter)
+                  $('.mui-slider-item-duplicate').last().html(temp)
+                }
+              }
+            },
+            error: function (e) {
+            }
+          });
+          
+          // 声音曲线
+          SW = new SiriWave({
+            width: 1080,
+            height: 200,
+            container: document.getElementById('siri')
+          });
+          SW.setSpeed(0.1);
+          SW.setNoise(0.5);
+          SW.start();
+          SW.stop();
+          
+          // 滚动条设置
           var options = {
             scrollY: true, //是否竖向滚动
             scrollX: false, //是否横向滚动
@@ -129,37 +113,36 @@
             deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
             bounce: true, //是否启用回弹
           }
-
           mui('#chatbox').scroll({
             deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
           });
           mui('.mui-scroll-wrapper').scroll({
             deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
           });
+          
+          // 轮播设置
           mui('#chatbox').scroll().scrollToBottom();
           var gallery = mui('.mui-slider');
           gallery.slider({
-            interval: 5000, //自动轮播周期，若为0则不自动播放，默认为0；
+            interval: 30000, //自动轮播周期，若为0则不自动播放，默认为0；
           });
         })
 
-        function checkVoice() {
-          var options = {
-            engine: 'iFly',
-            userInterface: false,
-            continue: true,
-            timeout: 100000
-          };
-          plus.speech.startRecognize(options, function(s) {
-            slidertime = 0;
-            console.log(s);
-            $('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>' + s + '</p></div>');
-            mui('#chatbox').scroll().reLayout();
-            mui('#chatbox').scroll().scrollToBottom();
-            if(s.indexOf('拜拜') > -1) {
-              plus.speech.stopRecognize();
+        // 当前政策内容
+        function policyContent (id) {
+          for (var i = 0; i < policyData.length; i++) {
+            if (id = policyData[i].id) {
+              var temp = '<table style="width: 80%;text-align: center;"><tr><th>政策标题</th><th>'+policyData[i].name+'</th></tr>'
+              console.log(policyData[i].contentList)
+              for (var j = 0; j < policyData[i].contentList.length; j++) {
+                console.log(j)
+                temp += '<tr><td>'+policyData[i].contentList[j].paramSign+'</td><td>'+policyData[i].contentList[j].content+'</td></tr>'
+              }
+              temp += '</table>'
+              $('#policyInfo').html(temp)
+              $('#policyInfo').show()
             }
-          });
+          }
         }
 
         //停止语音识别plus.speech.stopRecognize()
@@ -182,11 +165,8 @@
           });
         }
 
-        //调用知识库
-
         //时间戳
         var datetime;
-
         function dateTime() {
           var date = new Date();
           var month = date.getMonth() + 1;
@@ -215,7 +195,6 @@
 
         function knowledgebase(word) {
           slidertime = 0;
-
           var data = {
             callSign: datetime,
             chat: word,
@@ -332,7 +311,7 @@
           this.canvas = document.createElement('canvas');
           this.canvas.width = this.width;
           this.canvas.height = this.height;
-          this.canvas.style.width = (this.width / devicePixelRatio) + 'px';
+          this.canvas.style.width = '100%';
           this.canvas.style.height = (this.height / devicePixelRatio) + 'px';
 
           (this.opt.container || document.body).appendChild(this.canvas);
@@ -403,82 +382,85 @@
             this.setNoise(noise);
             this.setSpeed(speed);
           }
-
         };
-
-        var SW = new SiriWave({
-          width: 1480,
-          height: 200,
-          container: document.getElementById('siri')
-        });
-        SW.setSpeed(0.1);
-        SW.setNoise(0.5);
-        SW.start();
-        SW.stop();
 
         //去掉loading
         setTimeout(function() {
           $('.ui-loader').remove()
         }, 200)
-      })
     </script>
   </head>
 
   <body>
-    <!--屏保-->
-    <div id="screensaver" style="position: fixed;left:0;top:0;overflow:hidden;width: 100%;height: 100%;background-color: #000000;background-image: url('');background-size: cover;background-position: 50% 50%;background-repeat: no-repeat;z-index: 999;display: block;">
-      
+    <div id="policyInfo">
+      <table style="width: 80%;text-align: center;">
+      	<tr><th>政策标题</th><th>Header</th></tr>
+      	<tr><td>Data</td><td>政策内容</td></tr>
+      </table>
     </div>
-    <!--<div id="video" style="position: fixed;left: 0;top: 0;overflow: hidden;width: 100%;height: 100%;background: #CCCCCC;z-index: 888;display: block;">-->
-      <!--<video style="width: 100%;height: 100%;" autoplay="autoplay" loop controls muted >
-        <source src="images/HD_mp4.mp4" type="video/mp4">
-      </video>-->
-    </div>
+    
     <!--图片轮播-->
-    <div id="slider" class="mui-slider" style="z-index: 999;position: fixed;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;display: none;">
+    <div id="slider" class="mui-slider" style="z-index: 888;position: fixed;top: 0;left: 0;height: 100%;width: 100%;overflow: hidden;display: block;">
       <div class="mui-slider-group mui-slider-loop" class="full">
         <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
         <div class="mui-slider-item mui-slider-item-duplicate">
-          <a href="#" class="full"><img src="images/banner4.jpg" class="full"></a>
+          <div class="full" style="background: #000;font-size: 3rem;height: 1920px;">
+            <img src="images/banner7.jpg"/>
+          </div>
         </div>
         <div class="mui-slider-item">
-          <a href="#" class="full"><img src="images/banner1.jpg" class="full"></a>
+          <div class="full" style="background: #000;font-size: 3rem;height: 1920px;">
+            <img src="images/banner4.jpg"/>
+          </div>
         </div>
         <div class="mui-slider-item">
-          <a href="#" class="full"><img src="images/banner2.jpg" class="full"></a>
+          <div class="full" style="background: #000;font-size: 3rem;height: 1920px;">
+            <img src="images/banner5.jpg"/>
+          </div>
         </div>
         <div class="mui-slider-item">
-          <a href="#" class="full"><img src="images/banner3.jpg" class="full"></a>
+          <div class="full" style="background: #000;font-size: 3rem;height: 1920px;">
+            <img src="images/banner6.jpg"/>
+          </div>
         </div>
         <div class="mui-slider-item">
-          <a href="#" class="full"><img src="images/banner4.jpg" class="full"></a>
+          <div class="full" style="background: #000;font-size: 3rem;height: 1920px;">
+            <img src="images/banner7.jpg"/>
+          </div>
         </div>
         <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
         <div class="mui-slider-item mui-slider-item-duplicate">
-          <a href="#" class="full"><img src="images/banner1.jpg" class="full"></a>
+          <div class="full policy_bg">
+            <div class="policy_scroll">
+              <div class="policy_content">
+                <p>2019-01-25 15:54:19</p>
+                <h3 style="color: #9662bb;">政策标题</h3>
+                <p>申报时间：</p>
+                <p>政策支持：</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div class="c_bg">
       <img src="images/center.png" />
     </div>
-    <div id="siri" style="width: 1480px;position: relative;top: 1200px;height: 200px;overflow: hidden;left: -200px;z-index: 13;">
+    <div id="siri" style="width: 100%;position: relative;top: 63%;height: 200px;overflow: hidden;left: 0px;z-index: 13;">
 
     </div>
     <!--轮播结束-->
-    <!--<i class="fa fa-microphone" style="font-size: 8rem!important;position: absolute;top: 30%;right: 10%;z-index: 888;" onclick="startRecognize()"></i>-->
+    <i class="iconfont icon-voice" style="font-size: 8rem!important;position: absolute;top: 50%;right: 5%;z-index: 15;color: #fff;" onclick="startRecognize()"></i>
     <div class="mui-scroll-wrapper" id="chatbox">
       <div id="" class="mui-scroll">
         <div class="chatbox_left clearfix">
           <p>您好,很高兴为您服务</p>
         </div>
-        <!--<div class="chatbox_right clearfix">
-          <p>奥斯卡进度更快了解来看淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人、</p>
-        </div>-->
+        <div class="chatbox_right clearfix">
+          <p>奥斯卡进度更快了解来看淀区留学生创业园。2007年10月，国家人事部和北京市人民政府共建单位——中国北京（海淀）留学人员创业园。经过多年的建设，海淀创业园已经拥有三大孵化基地，培育了一批又一批的优秀企业和企业家，得到了党和国家领导人</p>
+        </div>
       </div>
     </div>
-    <script src="js/particles.min.js"></script>
-    <script src="js/app.js"></script>
   </body>
 
 </html>
