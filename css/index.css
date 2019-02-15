@@ -132,8 +132,10 @@ body {
   background-repeat: no-repeat;
 }
 .policy_scroll{
-  padding: 22% 20% 0 20%;
-  max-height: 75%;
+  position: relative;
+  padding: 0 20% 0 20%;
+  top: 13%;
+  max-height: 60%;
   overflow: scroll;
 }
 .policy_content{
@@ -147,26 +149,39 @@ body {
   text-overflow: ellipsis;
 }
 #policyInfo{
-  position: fixed;
+  position: absolute;
+  text-align: center;
   left:0;
   top:0;
   overflow-y:scroll;
+  overflow-x: hidden;
   width: 100%;
   height: 100%;
   background-color: #fff;
-  background-image: url('');
+  background-image: url('../images/policyinfobg.jpg');
   background-size: cover;
   background-position: 50% 50%;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   z-index: 998;
   display: none;
   padding: 5%;
 }
-td{
+.t{
+  width: 100%!important;
+  table-layout:fixed
+}
+td,th{
   padding: 1rem;
   text-align: left;
   line-height: 3rem;
   font-size: 3rem;
+  word-break: break-all;
+}
+th:first-child{
+  width: 20rem;
+}
+td:first-child{
+  width: 20rem;
 }
 .close{
   float: right;
@@ -182,4 +197,118 @@ p{
 }
 h3{
   font-size: 4rem;
+}
+.bigdata{
+  padding-top: 10rem;
+  background: url(../images/banner4.png);
+  height: 1920px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.bigdata p{
+  font-size: 2.6rem;
+}
+.all{
+  position: relative;
+  top: 2rem;
+  margin: 1rem;
+  height: 26rem;
+  background: url('../images/all.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.all_side{
+  text-align: center;
+  position: absolute;
+  width: 26rem;
+}
+.companytype{
+  position: relative;
+  top: 2rem;
+  margin: 1rem;
+  height: 60rem;
+  background: url(../images/companytype_1.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.companytype_side{
+  text-align: center;
+  position: absolute;
+  width: 20rem;
+}
+.companytype_side p{
+  padding: 1.5rem 0;
+  font-size: 2.6rem;
+}
+.companytype_side>img{
+  width: 10rem!important;
+  height: 10rem;
+}
+.companytype_side span{
+  font-size: 4rem;
+}
+.knowledge{
+  position: relative;
+  top: 2rem;
+  margin: 1rem;
+  height: 41rem;
+  background: url(../images/knowledge_1.png);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.knowledge_side{
+  text-align: center;
+  position: absolute;
+  width: 22rem;
+}
+.knowledge_side p{
+  padding: 1.5rem 0;
+}
+.knowledge_side img{
+  width: 10rem!important;
+}
+.knowledge_side span{
+  font-size: 4rem;
+}
+.banking{
+  position: relative;
+  top: 2rem;
+  margin: 1rem;
+  height: 39rem;
+  background: url(../images/banking_1.png);
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.bold{
+  font-weight: bold;
+}
+.cyan{
+  color: #00f4ff;
+}
+.blue{
+  color: #008cc8;
+}
+.orange{
+  color: #ff723a;
+}
+.bigdata_list{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 998;
+  background: url(../images/bigdata_list.png);
+  display: none;
+}
+.bigdata_info{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  overflow-y: scroll;
+  background: url(../images/bigdata_info.png);
+  display: none;
 }
