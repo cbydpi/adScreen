@@ -349,7 +349,9 @@
           $('#chatbox').children('div').append('<div class="chatbox_right clearfix"><p>' + s + '</p></div>');
           mui('#chatbox').scroll().reLayout();
           mui('#chatbox').scroll().scrollToBottom();
-          knowledgebase(s);
+          if (s.replace(/(^\s*)|(\s*$)/g, '') !== '') {
+            knowledgebase(s);
+          }
         }, function(e) {
           console.log(JSON.stringify(e))
           if (e.code == 4001) {
@@ -481,7 +483,7 @@
         console.log(transformword)
         var main = plus.android.runtimeMainActivity();
         var SpeechUtility = plus.android.importClass('com.iflytek.cloud.SpeechUtility');
-        SpeechUtility.createUtility(main, "appid=53feacdd");
+        SpeechUtility.createUtility(main, "appid=5a6ebba2");
         var SynthesizerPlayer = plus.android.importClass('com.iflytek.cloud.SpeechSynthesizer');
         play = SynthesizerPlayer.createSynthesizer(main, null);
         play.startSpeaking(transformword, receiver);
